@@ -27,7 +27,7 @@ const cors = require('cors'); // If you need CORS on your main app, ensure this 
 // const { required } = require('joi');
 
 // const PYTHON_CHATBOT_URL = 'http://127.0.0.1:5000/chat'; // Check this URL against your Python app's actual running URL and endpoint
-// const port= 3000;
+const port= 3000;
 
 
 
