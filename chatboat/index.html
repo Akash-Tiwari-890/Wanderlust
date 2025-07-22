@@ -1,0 +1,59 @@
+<div id="chat-interface">
+    <div id="messages" style="border: 1px solid #ccc; height: 300px; overflow-y: scroll; padding: 10px;">
+        </div>
+    <input type="text" id="user-input" placeholder="Type your message..." style="width: 70%;">
+    <button id="send-btn">Send</button>
+</div>
+
+<script>
+    const messagesDiv = document.getElementById('messages');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+
+    function appendMessage(sender, text) {
+        const msgElement = document.createElement('p');
+        msgElement.innerHTML = `<strong>${sender}:</strong> ${text}`;
+        messagesDiv.appendChild(msgElement);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to bottom
+    }
+
+    async function sendMessage() {
+        const message = userInput.value.trim();
+        if (!message) return;
+
+        appendMessage('You', message); // Display user message immediately
+        userInput.value = ''; // Clear input field
+
+        try {
+            const response = await fetch('http://localhost:3000/api/chat', { // <--- IMPORTANT: This targets your Node.js backend
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: message })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`Server error: ${response.status} - ${errorData.error || 'Unknown error'}`);
+            }
+
+            const data = await response.json();
+            appendMessage('Chatbot', data.reply); // Display chatbot's reply
+        } catch (error) {
+            console.error('Error communicating with chatbot:', error);
+            appendMessage('Chatbot', 'Sorry, I am unable to respond right now. Please try again later.');
+        }
+    }
+
+    // Event Listeners
+    sendBtn.addEventListener('click', sendMessage);
+    userInput.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    // Initial message (optional)
+    appendMessage('Chatbot', 'Hello! How can I assist you today?');
+</script>
