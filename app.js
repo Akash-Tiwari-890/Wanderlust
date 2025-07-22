@@ -83,7 +83,7 @@ async function getMapTilerSdk() {
 const store = MongoStore.create({
     mongoUrl: dburl, // Use the same MongoDB URL as above
     crypto :{
-        secret: process.env,SECRET ,
+        secret: process.env.SECRET ,
        
     },
     touchAfter: 24 * 3600, // How often to update the session in the database (in seconds)
