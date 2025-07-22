@@ -137,7 +137,10 @@ app.use((req,res,next)=>{
 // });
 
 
-
+app.get("/", (req, res) => {
+    console.log("Root path (/) hit! Redirecting to /listings.");
+    res.redirect("/listings"); // This sends the user's browser to the /listings URL
+});
 
 
 
